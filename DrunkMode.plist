@@ -1,0 +1,9 @@
+{
+	Filter = {
+		Bundles = (
+			"com.apple.Preferences",
+			"com.apple.chatkit",
+			"net.whatsapp.WhatsApp",
+		);
+	};
+}
