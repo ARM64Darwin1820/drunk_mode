@@ -19,16 +19,90 @@ static void setDrunkMode(BOOL value)
 
 %hook CKChatController
 -(void)messageEntryViewSendButtonHit:(id)messageEntryView {
+        if (getDrunkMode()) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
+                                                                             message:@"Go Home"
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    //We add buttons to the alert controller by creating UIAlertActions:
+    UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alertController addAction:actionOk];
+    [self presentViewController:alertController animated:YES completion:nil];
+        } else {
+            %orig();
+        }
+}
+
+
+%end
+
+
+/**
+WhatsApp Stuff [WIP]
+*/
+
+@interface WAChatBar : NSObject {}
+- (void)sendButtonTapped;
+- (void)cameraButtonTapped;
+- (void)attachMediaButtonTapped;
+- (void)hideKeyboard;
+@end
+
+
+//Hooks
+
+%hook WAChatBar
+
+UIViewController *rootViewController = [[[UIApplication sharedApplication] delegate] window].rootViewController;
+
+
+-(void)sendButtonTapped:(id)messageEntryView {
     if (getDrunkMode()) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
                                                                          message:@"Go Home"
                                                                   preferredStyle:UIAlertControllerStyleAlert];
-//We add buttons to the alert controller by creating UIAlertActions:
-UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
-                                                   style:UIAlertActionStyleDefault
-                                                 handler:nil];
-[alertController addAction:actionOk];
-[self presentViewController:alertController animated:YES completion:nil];
+        //We add buttons to the alert controller by creating UIAlertActions:
+        UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:nil];
+        [alertController addAction:actionOk];
+        [rootViewController presentViewController:alertController animated:YES completion:nil];
+    } else {
+        %orig();
+    }
+}
+
+
+-(void)cameraButtonTapped:(id)messageEntryView {
+    if (getDrunkMode()) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
+                                                                         message:@"Go Home"
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+        //We add buttons to the alert controller by creating UIAlertActions:
+        UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:nil];
+        [alertController addAction:actionOk];
+        [rootViewController presentViewController:alertController animated:YES completion:nil];
+            
+    } else {
+        %orig();
+    }
+}
+
+
+-(void)attachMediaButtonTapped:(id)messageEntryView {
+    if (getDrunkMode()) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
+                                                                         message:@"Go Home"
+                                                                  preferredStyle:UIAlertControllerStyleAlert];
+        //We add buttons to the alert controller by creating UIAlertActions:
+        UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:nil];
+        [alertController addAction:actionOk];
+        [rootViewController presentViewController:alertController animated:YES completion:nil];
     } else {
         %orig();
     }
@@ -36,6 +110,11 @@ UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
 
 
 %end
+
+/**
+ WhatsApp Stuff End
+ */
+
 
 %hook PSUIPrefsListController
 -(NSMutableArray *) specifiers {

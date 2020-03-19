@@ -1,9 +1,9 @@
 Package: me.qusic.drunkmode
 Name: DrunkMode
 Depends: mobilesubstrate
-Version: 0.0.2
+Version: 0.0.3
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
-Maintainer: Arm64Darwin1820, Chrisnba24
+Description: An awesome MobileSubstrate tweak! Now with experimental WhatsApp hooking!
+Maintainer: Chrisnba24, Arm64Darwin1820´
 Author: Qusic
 Section: Tweaks
