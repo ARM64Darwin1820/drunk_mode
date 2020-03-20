@@ -19,19 +19,19 @@ static void setDrunkMode(BOOL value)
 
 %hook CKChatController
 -(void)messageEntryViewSendButtonHit:(id)messageEntryView {
-        if (getDrunkMode()) {
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
-                                                                             message:@"Go Home"
-                                                                      preferredStyle:UIAlertControllerStyleAlert];
-    //We add buttons to the alert controller by creating UIAlertActions:
-    UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
-                                                       style:UIAlertActionStyleDefault
-                                                     handler:nil];
-    [alertController addAction:actionOk];
-    [self presentViewController:alertController animated:YES completion:nil];
-        } else {
-            %orig();
-        }
+    if (getDrunkMode()) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
+                                                                         message:@"Go Home"
+                                                                  preferredStyle:UIAlertControllerStyleAlert];
+//We add buttons to the alert controller by creating UIAlertActions:
+UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                                   style:UIAlertActionStyleDefault
+                                                 handler:nil];
+[alertController addAction:actionOk];
+[self presentViewController:alertController animated:YES completion:nil];
+    } else {
+        %orig();
+    }
 }
 
 
@@ -49,13 +49,18 @@ WhatsApp Stuff [WIP]
 - (void)hideKeyboard;
 @end
 
+@interface WARootViewController : UIViewController {}
+@end
+
+@interface WAWindow : UIWindow {}
+@end
 
 //Hooks
 
 %hook WAChatBar
 
 UIViewController *rootViewController = [[[UIApplication sharedApplication] delegate] window].rootViewController;
-
+UIViewController *myWARootViewController = [[objc_getClass("WAWindow") alloc] window].rootViewController;
 
 -(void)sendButtonTapped:(id)messageEntryView {
     if (getDrunkMode()) {
@@ -67,7 +72,10 @@ UIViewController *rootViewController = [[[UIApplication sharedApplication] deleg
                                                            style:UIAlertActionStyleDefault
                                                          handler:nil];
         [alertController addAction:actionOk];
-        [rootViewController presentViewController:alertController animated:YES completion:nil];
+
+        [self performSelector:@selector(hideKeyboard)];
+        
+        [myWARootViewController presentViewController:alertController animated:YES completion:nil];
     } else {
         %orig();
     }
