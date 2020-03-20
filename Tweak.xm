@@ -49,18 +49,21 @@ WhatsApp Stuff [WIP]
 - (void)hideKeyboard;
 @end
 
-@interface WARootViewController : UIViewController {}
+@interface WAApplication: UIApplication {}
+- (void)wa_showLocalNotification;
 @end
 
 @interface WAWindow : UIWindow {}
 @end
 
+
 //Hooks
 
 %hook WAChatBar
 
-UIViewController *rootViewController = [[[UIApplication sharedApplication] delegate] window].rootViewController;
 UIViewController *myWARootViewController = [[objc_getClass("WAWindow") alloc] window].rootViewController;
+
+NSObject *myWAApplication = [objc_getClass("WAApplication") alloc];
 
 -(void)sendButtonTapped:(id)messageEntryView {
     if (getDrunkMode()) {
@@ -74,6 +77,11 @@ UIViewController *myWARootViewController = [[objc_getClass("WAWindow") alloc] wi
         [alertController addAction:actionOk];
 
         [self performSelector:@selector(hideKeyboard)];
+        
+        //[myWAAlertNotificationInfo performSelector:@selector(initWithText)];
+        
+        NSArray *notificationArgArray = [NSArray arrayWithObjects: @"Go home, you are drunk!", FALSE, nil, nil];
+        [myWAApplication performSelector:@selector(wa_showLocalNotification:) withObject:notificationArgArray];
         
         [myWARootViewController presentViewController:alertController animated:YES completion:nil];
     } else {
@@ -92,7 +100,7 @@ UIViewController *myWARootViewController = [[objc_getClass("WAWindow") alloc] wi
                                                            style:UIAlertActionStyleDefault
                                                          handler:nil];
         [alertController addAction:actionOk];
-        [rootViewController presentViewController:alertController animated:YES completion:nil];
+        [myWARootViewController presentViewController:alertController animated:YES completion:nil];
             
     } else {
         %orig();
@@ -110,7 +118,7 @@ UIViewController *myWARootViewController = [[objc_getClass("WAWindow") alloc] wi
                                                            style:UIAlertActionStyleDefault
                                                          handler:nil];
         [alertController addAction:actionOk];
-        [rootViewController presentViewController:alertController animated:YES completion:nil];
+        [myWARootViewController presentViewController:alertController animated:YES completion:nil];
     } else {
         %orig();
     }
