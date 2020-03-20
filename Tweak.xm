@@ -46,24 +46,26 @@ WhatsApp Stuff [WIP]
 - (void)sendButtonTapped;
 - (void)cameraButtonTapped;
 - (void)attachMediaButtonTapped;
-- (void)hideKeyboard;
 @end
 
+/*  //headers/methods I used, mainly here for finding the relevant header files while working on this
+ 
 @interface WAApplication: UIApplication {}
 - (void)wa_showLocalNotification;
 @end
 
 @interface WAWindow : UIWindow {}
 @end
-
+*/
 
 //Hooks
 
 %hook WAChatBar
 
+//UIWindow *myWARootViewController = [[objc_getClass("WAWindow") alloc] window];
 UIViewController *myWARootViewController = [[objc_getClass("WAWindow") alloc] window].rootViewController;
 
-NSObject *myWAApplication = [objc_getClass("WAApplication") alloc];
+///NSObject *myWAApplication = [objc_getClass("WAApplication") alloc];
 
 -(void)sendButtonTapped:(id)messageEntryView {
     if (getDrunkMode()) {
@@ -78,10 +80,11 @@ NSObject *myWAApplication = [objc_getClass("WAApplication") alloc];
 
         [self performSelector:@selector(hideKeyboard)];
         
-        //[myWAAlertNotificationInfo performSelector:@selector(initWithText)];
         
-        NSArray *notificationArgArray = [NSArray arrayWithObjects: @"Go home, you are drunk!", FALSE, nil, nil];
-        [myWAApplication performSelector:@selector(wa_showLocalNotification:) withObject:notificationArgArray];
+        ///NSArray *notificationArgArray = [NSArray arrayWithObjects: @"Go home, you are drunk!", FALSE, nil, nil];
+        ///[myWAApplication performSelector:@selector(wa_showLocalNotification:) withObject:notificationArgArray];
+        
+        [myWARootViewController pushViewController:alertController animated: NO];
         
         [myWARootViewController presentViewController:alertController animated:YES completion:nil];
     } else {
