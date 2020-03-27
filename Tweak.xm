@@ -1,4 +1,5 @@
 #import "PSSpecifier.h"
+#import "WAHeaders.h"
 
 #define PreferencesPlist @"/var/mobile/Library/Preferences/me.qusic.drunkmode.plist"
 #define DrunkModeKey @"DrunkMode"
@@ -39,92 +40,81 @@ UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
 
 
 /**
-WhatsApp Stuff [WIP]
-*/
-
-@interface WAChatBar : NSObject {}
-- (void)sendButtonTapped;
-- (void)cameraButtonTapped;
-- (void)attachMediaButtonTapped;
-@end
-
-/*  //headers/methods I used, mainly here for finding the relevant header files while working on this
- 
-@interface WAApplication: UIApplication {}
-- (void)wa_showLocalNotification;
-@end
-
-@interface WAWindow : UIWindow {}
-@end
-*/
+ WhatsApp Stuff [WIP]
+ Credit for the part that displays the alert and the WAHeaders.h file  goes to Reddit User /u/Chrisnba24 (https://github.com/chrislopez24/drunk_mode/)
+ Seriously, I don't know shit about writing tweaks, he did all the hard work!
+ */
 
 //Hooks
 
 %hook WAChatBar
 
-//UIWindow *myWARootViewController = [[objc_getClass("WAWindow") alloc] window];
-UIViewController *myWARootViewController = [[objc_getClass("WAWindow") alloc] window].rootViewController;
+UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
 
-///NSObject *myWAApplication = [objc_getClass("WAApplication") alloc];
-
--(void)sendButtonTapped:(id)messageEntryView {
+-(void)sendButtonTapped:(id)arg1 {
     if (getDrunkMode()) {
+        // TODO: This really needs to be refactored into a function createAlert
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
-                                                                         message:@"Go Home"
-                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                                                               message:@"Go Home"
+                                                               preferredStyle:UIAlertControllerStyleAlert];
+
         //We add buttons to the alert controller by creating UIAlertActions:
         UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:nil];
+                                                style:UIAlertActionStyleDefault
+                                                handler:nil];
         [alertController addAction:actionOk];
+        [self.window makeKeyAndVisible];
+        
+        [self.window.rootViewController presentViewController:alertController animated:YES completion: ^{
+            [self performSelector:@selector(setKeyboardInputView)];
+            }
+        ];
 
-        [self performSelector:@selector(hideKeyboard)];
+            //TODO: open keyboard once we close the alert
+            //[self performSelector:@selector(setKeyboardInputView)];
+            // Did it
         
-        
-        ///NSArray *notificationArgArray = [NSArray arrayWithObjects: @"Go home, you are drunk!", FALSE, nil, nil];
-        ///[myWAApplication performSelector:@selector(wa_showLocalNotification:) withObject:notificationArgArray];
-        
-        [myWARootViewController pushViewController:alertController animated: NO];
-        
-        [myWARootViewController presentViewController:alertController animated:YES completion:nil];
-    } else {
+   } else {
         %orig();
-    }
+   }
 }
 
 
 -(void)cameraButtonTapped:(id)messageEntryView {
     if (getDrunkMode()) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
-                                                                         message:@"Go Home"
-                                                                      preferredStyle:UIAlertControllerStyleAlert];
-        //We add buttons to the alert controller by creating UIAlertActions:
+                                                               message:@"Go Home"
+                                                               preferredStyle:UIAlertControllerStyleAlert];
+
         UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:nil];
+                                                style:UIAlertActionStyleDefault
+                                                handler:nil];
         [alertController addAction:actionOk];
-        [myWARootViewController presentViewController:alertController animated:YES completion:nil];
-            
-    } else {
+        [self.window makeKeyAndVisible];
+        [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+
+   } else {
         %orig();
-    }
+   }
 }
 
 
 -(void)attachMediaButtonTapped:(id)messageEntryView {
     if (getDrunkMode()) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
-                                                                         message:@"Go Home"
-                                                                  preferredStyle:UIAlertControllerStyleAlert];
-        //We add buttons to the alert controller by creating UIAlertActions:
-        UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:nil];
-        [alertController addAction:actionOk];
-        [myWARootViewController presentViewController:alertController animated:YES completion:nil];
-    } else {
+       UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
+                                                               message:@"Go Home"
+                                                               preferredStyle:UIAlertControllerStyleAlert];
+
+       UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                                style:UIAlertActionStyleDefault
+                                                handler:nil];
+      [alertController addAction:actionOk];
+      [self.window makeKeyAndVisible];
+      [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+
+   } else {
         %orig();
-    }
+   }
 }
 
 
