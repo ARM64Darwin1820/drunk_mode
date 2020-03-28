@@ -46,6 +46,18 @@ UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
  */
 
 //Hooks
+    /* WIP: Stop sending of messages - failsafe
+    %hook WAMessagingService
+    - (_Bool)canSendMessages {
+        if (getDrunkMode()) {
+            return false;
+        } else {
+             %orig();
+        }
+        
+    }
+    %end
+    */
 
 %hook WAChatBar
 
@@ -61,18 +73,19 @@ UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
         //We add buttons to the alert controller by creating UIAlertActions:
         UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
                                                 style:UIAlertActionStyleDefault
-                                                handler:nil];
+                                                         handler:nil
+                                   /*^{
+                                       //TODO: open keyboard once we close the alert
+                                       [self performSelector:@selector(updateVisibleStateOfTextInputModeViews)];
+                                       // Just trying here!
+                                   }*/
+        ];
+        
+        
         [alertController addAction:actionOk];
         [self.window makeKeyAndVisible];
-        
-        [self.window.rootViewController presentViewController:alertController animated:YES completion: ^{
-            [self performSelector:@selector(setKeyboardInputView)];
-            }
-        ];
-
-            //TODO: open keyboard once we close the alert
-            //[self performSelector:@selector(setKeyboardInputView)];
-            // Did it
+        [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+        //[self performSelector:@selector(layoutTextInputContainerView)];
         
    } else {
         %orig();
@@ -117,7 +130,92 @@ UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
    }
 }
 
+- (void)createGimmickPicker {
+    if (getDrunkMode()) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
+                                                               message:@"Go Home"
+                                                               preferredStyle:UIAlertControllerStyleAlert];
 
+        UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                                style:UIAlertActionStyleDefault
+                                                handler:nil];
+        [alertController addAction:actionOk];
+        [self.window makeKeyAndVisible];
+        [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+    } else {
+        %orig();
+    }
+}
+
+- (void)pttButtonPressed:(id)arg1 withEvent:(id)arg2 {
+    if (getDrunkMode()) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
+                                                               message:@"Go Home"
+                                                               preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                                style:UIAlertActionStyleDefault
+                                                handler:nil];
+        [alertController addAction:actionOk];
+        [self.window makeKeyAndVisible];
+        [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+    } else {
+        %orig();
+    }
+}
+
+%end
+
+
+%hook WAChatViewController
+
+- (void)groupCallButtonTapped:(id)arg1 {
+   if (getDrunkMode()) {
+       UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
+                                                              message:@"Go Home"
+                                                              preferredStyle:UIAlertControllerStyleAlert];
+
+       UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                               style:UIAlertActionStyleDefault
+                                               handler:nil];
+       [alertController addAction:actionOk];
+       [self presentViewController:alertController animated:YES completion:nil];
+   } else {
+       %orig();
+   }
+}
+
+- (void)callButtonTapped:(id)arg1 {
+   if (getDrunkMode()) {
+       UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
+                                                              message:@"Go Home"
+                                                              preferredStyle:UIAlertControllerStyleAlert];
+
+       UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                               style:UIAlertActionStyleDefault
+                                               handler:nil];
+       [alertController addAction:actionOk];
+       [self presentViewController:alertController animated:YES completion:nil];
+   } else {
+       %orig();
+   }
+}
+
+- (void)videoCallButtonTapped:(id)arg1 {
+   if (getDrunkMode()) {
+       UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
+                                                              message:@"Go Home"
+                                                              preferredStyle:UIAlertControllerStyleAlert];
+
+       UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
+                                               style:UIAlertActionStyleDefault
+                                               handler:nil];
+       [alertController addAction:actionOk];
+       [self presentViewController:alertController animated:YES completion:nil];
+   } else {
+       %orig();
+   }
+}
 %end
 
 /**
