@@ -39,25 +39,13 @@ UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
 %end
 
 
-/**
+/*
  WhatsApp Stuff [WIP]
  Credit for the part that displays the alert and the WAHeaders.h file  goes to Reddit User /u/Chrisnba24 (https://github.com/chrislopez24/drunk_mode/)
  Seriously, I don't know shit about writing tweaks, he did all the hard work!
  */
 
 //Hooks
-    /* WIP: Stop sending of messages - failsafe
-    %hook WAMessagingService
-    - (_Bool)canSendMessages {
-        if (getDrunkMode()) {
-            return false;
-        } else {
-             %orig();
-        }
-        
-    }
-    %end
-    */
 
 %hook WAChatBar
 
@@ -73,19 +61,10 @@ UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
         //We add buttons to the alert controller by creating UIAlertActions:
         UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Whaat???"
                                                 style:UIAlertActionStyleDefault
-                                                         handler:nil
-                                   /*^{
-                                       //TODO: open keyboard once we close the alert
-                                       [self performSelector:@selector(updateVisibleStateOfTextInputModeViews)];
-                                       // Just trying here!
-                                   }*/
-        ];
-        
-        
+                                                handler:nil];
         [alertController addAction:actionOk];
         [self.window makeKeyAndVisible];
         [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
-        //[self performSelector:@selector(layoutTextInputContainerView)];
         
    } else {
         %orig();
@@ -93,7 +72,7 @@ UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
 }
 
 
--(void)cameraButtonTapped:(id)messageEntryView {
+-(void)cameraButtonTapped:(id)arg1 {
     if (getDrunkMode()) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
                                                                message:@"Go Home"
@@ -112,7 +91,7 @@ UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
 }
 
 
--(void)attachMediaButtonTapped:(id)messageEntryView {
+-(void)attachMediaButtonTapped:(id)arg1 {
     if (getDrunkMode()) {
        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Drunk Mode"
                                                                message:@"Go Home"
@@ -218,7 +197,7 @@ UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
 }
 %end
 
-/**
+/*
  WhatsApp Stuff End
  */
 
